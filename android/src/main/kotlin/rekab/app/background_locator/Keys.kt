@@ -119,6 +119,9 @@ class Keys {
         val SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG = "settings_android_notificationButtonMsg"
 
         @JvmStatic
+        val SETTINGS_ANDROID_HAS_NOTIFICATION_BUTTONS = "settings_android_has_notification_buttons"
+
+        @JvmStatic
         val SETTINGS_ANDROID_NOTIFICATION_ICON = "settings_android_notificationIcon"
 
         @JvmStatic

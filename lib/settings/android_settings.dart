@@ -37,9 +37,12 @@ class AndroidNotificationSettings {
     this.notificationIcon = '',
     this.notificationButton1Msg = 'Flutter',
     this.notificationIconColor = Colors.grey,
+    this.hasNotificationButtons = false,
     this.notificationTapCallback,
     this.notificationButton1TapCallback,
   });
+
+  final bool hasNotificationButtons;
 }
 
 class AndroidSettings extends LocatorSettings {
@@ -80,6 +83,8 @@ class AndroidSettings extends LocatorSettings {
           androidNotificationSettings.notificationBigMsg,
       Keys.SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG:
           androidNotificationSettings.notificationButton1Msg,
+      Keys.SETTINGS_ANDROID_HAS_NOTIFICATION_BUTTONS:
+          androidNotificationSettings.hasNotificationButtons,
       Keys.SETTINGS_ANDROID_NOTIFICATION_ICON:
           androidNotificationSettings.notificationIcon,
       Keys.SETTINGS_ANDROID_NOTIFICATION_ICON_COLOR:

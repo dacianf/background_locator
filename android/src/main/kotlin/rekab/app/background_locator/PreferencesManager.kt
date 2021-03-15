@@ -69,6 +69,11 @@ class PreferencesManager {
                 .apply()
 
             sharedPreferences.edit()
+                .putBoolean(Keys.SETTINGS_ANDROID_HAS_NOTIFICATION_BUTTONS,
+                            settings[Keys.SETTINGS_ANDROID_HAS_NOTIFICATION_BUTTONS] as Boolean)
+                .apply()
+
+            sharedPreferences.edit()
                 .putString(Keys.SETTINGS_ANDROID_NOTIFICATION_ICON,
                            settings[Keys.SETTINGS_ANDROID_NOTIFICATION_ICON] as String)
                 .apply()
@@ -137,6 +142,9 @@ class PreferencesManager {
 
             settings[Keys.SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG] =
                 sharedPreferences.getString(Keys.SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG, "")
+
+            settings[Keys.SETTINGS_ANDROID_HAS_NOTIFICATION_BUTTONS] =
+                sharedPreferences.getBoolean(Keys.SETTINGS_ANDROID_HAS_NOTIFICATION_BUTTONS, false)
 
             settings[Keys.SETTINGS_ANDROID_NOTIFICATION_ICON] =
                 sharedPreferences.getString(Keys.SETTINGS_ANDROID_NOTIFICATION_ICON, "")

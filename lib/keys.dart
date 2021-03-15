@@ -50,6 +50,8 @@ class Keys {
       'settings_android_notificationBigMsg';
   static const String SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG =
       'settings_android_notificationButtonMsg';
+  static const String SETTINGS_ANDROID_HAS_NOTIFICATION_BUTTONS =
+      'settings_android_has_notification_buttons';
   static const String SETTINGS_ANDROID_NOTIFICATION_ICON =
       'settings_android_notificationIcon';
   static const String SETTINGS_ANDROID_NOTIFICATION_ICON_COLOR =

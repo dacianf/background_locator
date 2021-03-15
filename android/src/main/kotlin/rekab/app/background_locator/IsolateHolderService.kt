@@ -22,6 +22,7 @@ import rekab.app.background_locator.Keys.Companion.INIT_CALLBACK_HANDLE_KEY
 import rekab.app.background_locator.Keys.Companion.INIT_DATA_CALLBACK_KEY
 import rekab.app.background_locator.Keys.Companion.NOTIFICATION_ACTION
 import rekab.app.background_locator.Keys.Companion.NOTIFICATION_ACTION_BUTTON_1
+import rekab.app.background_locator.Keys.Companion.SETTINGS_ANDROID_HAS_NOTIFICATION_BUTTONS
 import rekab.app.background_locator.Keys.Companion.SETTINGS_ANDROID_NOTIFICATION_BIG_MSG
 import rekab.app.background_locator.Keys.Companion.SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG
 import rekab.app.background_locator.Keys.Companion.SETTINGS_ANDROID_NOTIFICATION_CHANNEL_NAME
@@ -90,6 +91,7 @@ class IsolateHolderService : Service() {
     private var notificationBigMsg =
         "Background location is on to keep the app up-tp-date with your location. This is required for main features to work properly when the app is not running."
     private var notificationButtonMsg = "Button1"
+    private var hasNotificationButtons = true
     private var notificationIconColor = 0
     private var icon = 0
     private var wakeLockTime = 60 * 60 * 1000L // 1 hour default wake lock time
@@ -145,7 +147,7 @@ class IsolateHolderService : Service() {
                                                                            actionButton1,
                                                                            PendingIntent.FLAG_UPDATE_CURRENT)
 
-        return NotificationCompat.Builder(this, CHANNEL_ID)
+        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle(notificationTitle)
             .setContentText(notificationMsg)
             .setStyle(NotificationCompat.BigTextStyle()
@@ -153,11 +155,15 @@ class IsolateHolderService : Service() {
             .setSmallIcon(icon)
             .setColor(notificationIconColor)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .addAction(0, notificationButtonMsg, actionButtonIntent1)
             .setContentIntent(pendingIntent)
             .setOnlyAlertOnce(true) // so when data is updated don't make sound and alert in android 8.0+
             .setOngoing(true)
-            .build()
+
+        if (hasNotificationButtons) {
+            notification.addAction(0, notificationButtonMsg, actionButtonIntent1)
+        }
+
+        return notification.build()
     }
 
     private fun stop() {
@@ -205,6 +211,7 @@ class IsolateHolderService : Service() {
         notificationMsg = intent.getStringExtra(SETTINGS_ANDROID_NOTIFICATION_MSG)
         notificationBigMsg = intent.getStringExtra(SETTINGS_ANDROID_NOTIFICATION_BIG_MSG)
         notificationButtonMsg = intent.getStringExtra(SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG)
+        hasNotificationButtons = intent.getBooleanExtra(SETTINGS_ANDROID_HAS_NOTIFICATION_BUTTONS, false)
         val iconNameDefault = "ic_launcher"
         var iconName = intent.getStringExtra(SETTINGS_ANDROID_NOTIFICATION_ICON)
         if (iconName == null || iconName.isEmpty()) {
@@ -245,6 +252,10 @@ class IsolateHolderService : Service() {
 
         if (intent.hasExtra(SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG)) {
             notificationButtonMsg = intent.getStringExtra(SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG)
+        }
+
+        if (intent.hasExtra(SETTINGS_ANDROID_HAS_NOTIFICATION_BUTTONS)) {
+            hasNotificationButtons = intent.getBooleanExtra(SETTINGS_ANDROID_HAS_NOTIFICATION_BUTTONS, false)
         }
 
         val notification = getNotification()

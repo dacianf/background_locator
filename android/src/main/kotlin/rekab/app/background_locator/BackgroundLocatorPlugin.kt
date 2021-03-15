@@ -54,6 +54,7 @@ import rekab.app.background_locator.Keys.Companion.NOTIFICATION_ACTION_BUTTON_1
 import rekab.app.background_locator.Keys.Companion.NOTIFICATION_BUTTON_1_CALLBACK_HANDLE_KEY
 import rekab.app.background_locator.Keys.Companion.NOTIFICATION_CALLBACK_HANDLE_KEY
 import rekab.app.background_locator.Keys.Companion.SETTINGS_ACCURACY
+import rekab.app.background_locator.Keys.Companion.SETTINGS_ANDROID_HAS_NOTIFICATION_BUTTONS
 import rekab.app.background_locator.Keys.Companion.SETTINGS_ANDROID_NOTIFICATION_BIG_MSG
 import rekab.app.background_locator.Keys.Companion.SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG
 import rekab.app.background_locator.Keys.Companion.SETTINGS_ANDROID_NOTIFICATION_CHANNEL_NAME
@@ -148,6 +149,8 @@ class BackgroundLocatorPlugin
                             settings[SETTINGS_ANDROID_NOTIFICATION_BIG_MSG] as String)
             intent.putExtra(SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG,
                             settings[SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG] as String)
+            intent.putExtra(SETTINGS_ANDROID_HAS_NOTIFICATION_BUTTONS,
+                            settings[SETTINGS_ANDROID_HAS_NOTIFICATION_BUTTONS] as Boolean)
             intent.putExtra(SETTINGS_ANDROID_NOTIFICATION_ICON, settings[SETTINGS_ANDROID_NOTIFICATION_ICON] as String)
             intent.putExtra(SETTINGS_ANDROID_NOTIFICATION_ICON_COLOR,
                             settings[SETTINGS_ANDROID_NOTIFICATION_ICON_COLOR] as Long)
@@ -264,6 +267,10 @@ class BackgroundLocatorPlugin
             if (args.containsKey(SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG)) {
                 intent.putExtra(SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG,
                                 args[SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG] as String)
+            }
+            if (args.containsKey(SETTINGS_ANDROID_HAS_NOTIFICATION_BUTTONS)) {
+                intent.putExtra(SETTINGS_ANDROID_HAS_NOTIFICATION_BUTTONS,
+                                args[SETTINGS_ANDROID_HAS_NOTIFICATION_BUTTONS] as Boolean)
             }
 
             ContextCompat.startForegroundService(context, intent)
