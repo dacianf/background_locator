@@ -31,9 +31,11 @@ import rekab.app.background_locator.Keys.Companion.ARG_CALLBACK_DISPATCHER
 import rekab.app.background_locator.Keys.Companion.ARG_DISPOSE_CALLBACK
 import rekab.app.background_locator.Keys.Companion.ARG_INIT_CALLBACK
 import rekab.app.background_locator.Keys.Companion.ARG_INIT_DATA_CALLBACK
+import rekab.app.background_locator.Keys.Companion.ARG_NOTIFICATION_BUTTON_1_CALLBACK
 import rekab.app.background_locator.Keys.Companion.ARG_NOTIFICATION_CALLBACK
 import rekab.app.background_locator.Keys.Companion.ARG_SETTINGS
 import rekab.app.background_locator.Keys.Companion.BACKGROUND_CHANNEL_ID
+import rekab.app.background_locator.Keys.Companion.BCM_NOTIFICATION_BUTTON1_CLICK
 import rekab.app.background_locator.Keys.Companion.BCM_NOTIFICATION_CLICK
 import rekab.app.background_locator.Keys.Companion.CALLBACK_DISPATCHER_HANDLE_KEY
 import rekab.app.background_locator.Keys.Companion.CALLBACK_HANDLE_KEY
@@ -48,9 +50,12 @@ import rekab.app.background_locator.Keys.Companion.METHOD_PLUGIN_REGISTER_LOCATI
 import rekab.app.background_locator.Keys.Companion.METHOD_PLUGIN_UN_REGISTER_LOCATION_UPDATE
 import rekab.app.background_locator.Keys.Companion.METHOD_PLUGIN_UPDATE_NOTIFICATION
 import rekab.app.background_locator.Keys.Companion.NOTIFICATION_ACTION
+import rekab.app.background_locator.Keys.Companion.NOTIFICATION_ACTION_BUTTON_1
+import rekab.app.background_locator.Keys.Companion.NOTIFICATION_BUTTON_1_CALLBACK_HANDLE_KEY
 import rekab.app.background_locator.Keys.Companion.NOTIFICATION_CALLBACK_HANDLE_KEY
 import rekab.app.background_locator.Keys.Companion.SETTINGS_ACCURACY
 import rekab.app.background_locator.Keys.Companion.SETTINGS_ANDROID_NOTIFICATION_BIG_MSG
+import rekab.app.background_locator.Keys.Companion.SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG
 import rekab.app.background_locator.Keys.Companion.SETTINGS_ANDROID_NOTIFICATION_CHANNEL_NAME
 import rekab.app.background_locator.Keys.Companion.SETTINGS_ANDROID_NOTIFICATION_ICON
 import rekab.app.background_locator.Keys.Companion.SETTINGS_ANDROID_NOTIFICATION_ICON_COLOR
@@ -102,6 +107,9 @@ class BackgroundLocatorPlugin
             val notificationCallback = args[ARG_NOTIFICATION_CALLBACK] as? Long
             setCallbackHandle(context, NOTIFICATION_CALLBACK_HANDLE_KEY, notificationCallback)
 
+            val notificationButton1Callback = args[ARG_NOTIFICATION_BUTTON_1_CALLBACK] as? Long
+            setCallbackHandle(context, NOTIFICATION_BUTTON_1_CALLBACK_HANDLE_KEY, notificationButton1Callback)
+
             val initCallback = args[ARG_INIT_CALLBACK] as? Long
             setCallbackHandle(context, INIT_CALLBACK_HANDLE_KEY, initCallback)
 
@@ -138,6 +146,8 @@ class BackgroundLocatorPlugin
             intent.putExtra(SETTINGS_ANDROID_NOTIFICATION_MSG, settings[SETTINGS_ANDROID_NOTIFICATION_MSG] as String)
             intent.putExtra(SETTINGS_ANDROID_NOTIFICATION_BIG_MSG,
                             settings[SETTINGS_ANDROID_NOTIFICATION_BIG_MSG] as String)
+            intent.putExtra(SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG,
+                            settings[SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG] as String)
             intent.putExtra(SETTINGS_ANDROID_NOTIFICATION_ICON, settings[SETTINGS_ANDROID_NOTIFICATION_ICON] as String)
             intent.putExtra(SETTINGS_ANDROID_NOTIFICATION_ICON_COLOR,
                             settings[SETTINGS_ANDROID_NOTIFICATION_ICON_COLOR] as Long)
@@ -250,6 +260,10 @@ class BackgroundLocatorPlugin
             if (args.containsKey(SETTINGS_ANDROID_NOTIFICATION_BIG_MSG)) {
                 intent.putExtra(SETTINGS_ANDROID_NOTIFICATION_BIG_MSG,
                                 args[SETTINGS_ANDROID_NOTIFICATION_BIG_MSG] as String)
+            }
+            if (args.containsKey(SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG)) {
+                intent.putExtra(SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG,
+                                args[SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG] as String)
             }
 
             ContextCompat.startForegroundService(context, intent)
@@ -380,20 +394,33 @@ class BackgroundLocatorPlugin
     }
 
     override fun onNewIntent(intent: Intent?): Boolean {
-        if (intent?.action != NOTIFICATION_ACTION) {
+        if (intent?.action != NOTIFICATION_ACTION && intent?.action != NOTIFICATION_ACTION_BUTTON_1) {
             // this is not our notification
             return false
         }
-
-        val notificationCallback = getCallbackHandle(activity!!, NOTIFICATION_CALLBACK_HANDLE_KEY)
+        var methodName = ""
+        var callbackName = ""
+        var notificationCallback: Long? = null
+        when (intent.action) {
+            NOTIFICATION_ACTION -> {
+                methodName = BCM_NOTIFICATION_CLICK
+                callbackName = ARG_NOTIFICATION_CALLBACK
+                notificationCallback = getCallbackHandle(activity!!, NOTIFICATION_CALLBACK_HANDLE_KEY)
+            }
+            NOTIFICATION_ACTION_BUTTON_1 -> {
+                methodName = BCM_NOTIFICATION_BUTTON1_CLICK
+                callbackName = ARG_NOTIFICATION_BUTTON_1_CALLBACK
+                notificationCallback = getCallbackHandle(activity!!, NOTIFICATION_BUTTON_1_CALLBACK_HANDLE_KEY)
+            }
+        }
         if (notificationCallback != null && IsolateHolderService.sBackgroundFlutterEngine != null) {
             val backgroundChannel = MethodChannel(IsolateHolderService.sBackgroundFlutterEngine!!.dartExecutor
                                                       .binaryMessenger,
                                                   BACKGROUND_CHANNEL_ID)
             Handler(activity?.mainLooper)
                 .post {
-                    backgroundChannel.invokeMethod(BCM_NOTIFICATION_CLICK,
-                                                   hashMapOf(ARG_NOTIFICATION_CALLBACK to notificationCallback))
+                    backgroundChannel.invokeMethod(methodName,
+                                                   hashMapOf(callbackName to notificationCallback))
                 }
         }
 

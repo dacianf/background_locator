@@ -61,7 +61,7 @@ class BackgroundLocator {
   }
 
   static Future<void> updateNotificationText(
-      {String title, String msg, String bigMsg}) async {
+      {String title, String msg, String bigMsg, String buttonMsg}) async {
     final Map<String, dynamic> arg = {};
 
     if (title != null) {
@@ -74,6 +74,10 @@ class BackgroundLocator {
 
     if (bigMsg != null) {
       arg[Keys.SETTINGS_ANDROID_NOTIFICATION_BIG_MSG] = bigMsg;
+    }
+
+    if (buttonMsg != null) {
+      arg[Keys.SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG] = buttonMsg;
     }
 
     await _channel.invokeMethod(Keys.METHOD_PLUGIN_UPDATE_NOTIFICATION, arg);

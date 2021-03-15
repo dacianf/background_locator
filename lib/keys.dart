@@ -28,6 +28,7 @@ class Keys {
   static const String ARG_TIME = 'time';
   static const String ARG_CALLBACK = 'callback';
   static const String ARG_NOTIFICATION_CALLBACK = 'notificationCallback';
+  static const String ARG_NOTIFICATION_BUTTON_1_CALLBACK = 'notificationButton1Callback';
   static const String ARG_INIT_CALLBACK = 'initCallback';
   static const String ARG_INIT_DATA_CALLBACK = 'initDataCallback';
   static const String ARG_DISPOSE_CALLBACK = 'disposeCallback';
@@ -47,6 +48,8 @@ class Keys {
       'settings_android_notificationMsg';
   static const String SETTINGS_ANDROID_NOTIFICATION_BIG_MSG =
       'settings_android_notificationBigMsg';
+  static const String SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG =
+      'settings_android_notificationButtonMsg';
   static const String SETTINGS_ANDROID_NOTIFICATION_ICON =
       'settings_android_notificationIcon';
   static const String SETTINGS_ANDROID_NOTIFICATION_ICON_COLOR =
@@ -59,6 +62,7 @@ class Keys {
 
   static const String BCM_SEND_LOCATION = 'BCM_SEND_LOCATION';
   static const String BCM_NOTIFICATION_CLICK = 'BCM_NOTIFICATION_CLICK';
+  static const String BCM_NOTIFICATION_BUTTON1_CLICK = 'BCM_NOTIFICATION_BUTTON1_CLICK';
   static const String BCM_INIT = 'BCM_INIT';
   static const String BCM_DISPOSE = 'BCM_DISPOSE';
 }

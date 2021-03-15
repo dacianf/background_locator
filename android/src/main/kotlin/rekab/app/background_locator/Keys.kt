@@ -7,18 +7,28 @@ class Keys {
 
         @JvmStatic
         val CALLBACK_DISPATCHER_HANDLE_KEY = "CALLBACK_DISPATCHER_HANDLE_KEY"
+
         @JvmStatic
         val CALLBACK_HANDLE_KEY = "CALLBACK_HANDLE_KEY"
+
         @JvmStatic
         val NOTIFICATION_CALLBACK_HANDLE_KEY = "NOTIFICATION_CALLBACK_HANDLE_KEY"
+
+        @JvmStatic
+        val NOTIFICATION_BUTTON_1_CALLBACK_HANDLE_KEY = "NOTIFICATION_BUTTON_1_CALLBACK_HANDLE_KEY"
+
         @JvmStatic
         val INIT_CALLBACK_HANDLE_KEY = "INIT_CALLBACK_HANDLE_KEY"
+
         @JvmStatic
         val INIT_DATA_CALLBACK_KEY = "INIT_DATA_CALLBACK_KEY"
+
         @JvmStatic
         val DISPOSE_CALLBACK_HANDLE_KEY = "DISPOSE_CALLBACK_HANDLE_KEY"
+
         @JvmStatic
         val CHANNEL_ID = "app.rekab/locator_plugin"
+
         @JvmStatic
         val BACKGROUND_CHANNEL_ID = "app.rekab/locator_plugin_background"
 
@@ -51,24 +61,37 @@ class Keys {
         val ARG_SPEED = "speed"
         @JvmStatic
         val ARG_SPEED_ACCURACY = "speed_accuracy"
+
         @JvmStatic
         val ARG_HEADING = "heading"
+
         @JvmStatic
         val ARG_TIME = "time"
+
         @JvmStatic
         val ARG_CALLBACK = "callback"
+
         @JvmStatic
         val ARG_NOTIFICATION_CALLBACK = "notificationCallback"
+
+        @JvmStatic
+        val ARG_NOTIFICATION_BUTTON_1_CALLBACK = "notificationButton1Callback"
+
         @JvmStatic
         val ARG_INIT_CALLBACK = "initCallback"
+
         @JvmStatic
         val ARG_INIT_DATA_CALLBACK = "initDataCallback"
+
         @JvmStatic
         val ARG_DISPOSE_CALLBACK = "disposeCallback"
+
         @JvmStatic
         val ARG_LOCATION = "location"
+
         @JvmStatic
         val ARG_SETTINGS = "settings"
+
         @JvmStatic
         val ARG_CALLBACK_DISPATCHER = "callbackDispatcher"
 
@@ -79,31 +102,50 @@ class Keys {
         val SETTINGS_INTERVAL = "settings_interval"
         @JvmStatic
         val SETTINGS_DISTANCE_FILTER = "settings_distanceFilter"
+
         @JvmStatic
         val SETTINGS_ANDROID_NOTIFICATION_CHANNEL_NAME = "settings_android_notificationChannelName"
+
         @JvmStatic
         val SETTINGS_ANDROID_NOTIFICATION_TITLE = "settings_android_notificationTitle"
+
         @JvmStatic
         val SETTINGS_ANDROID_NOTIFICATION_MSG = "settings_android_notificationMsg"
+
         @JvmStatic
         val SETTINGS_ANDROID_NOTIFICATION_BIG_MSG = "settings_android_notificationBigMsg"
+
+        @JvmStatic
+        val SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG = "settings_android_notificationButtonMsg"
+
         @JvmStatic
         val SETTINGS_ANDROID_NOTIFICATION_ICON = "settings_android_notificationIcon"
+
         @JvmStatic
         val SETTINGS_ANDROID_NOTIFICATION_ICON_COLOR = "settings_android_notificationIconColor"
+
         @JvmStatic
         val SETTINGS_ANDROID_WAKE_LOCK_TIME = "settings_android_wakeLockTime"
 
         @JvmStatic
         val BCM_SEND_LOCATION = "BCM_SEND_LOCATION"
+
         @JvmStatic
         val BCM_NOTIFICATION_CLICK = "BCM_NOTIFICATION_CLICK"
+
+        @JvmStatic
+        val BCM_NOTIFICATION_BUTTON1_CLICK = "BCM_NOTIFICATION_BUTTON1_CLICK"
+
         @JvmStatic
         val BCM_INIT = "BCM_INIT"
+
         @JvmStatic
         val BCM_DISPOSE = "BCM_DISPOSE"
 
         @JvmStatic
         val NOTIFICATION_ACTION = "com.rekab.background_locator.notification"
+
+        @JvmStatic
+        val NOTIFICATION_ACTION_BUTTON_1 = "com.rekab.background_locator.notificationButton1Action"
     }
 }

@@ -251,6 +251,9 @@ class _MyAppState extends State<MyApp> {
                 notificationIcon: '',
                 notificationIconColor: Colors.grey,
                 notificationTapCallback:
-                    LocationCallbackHandler.notificationCallback)));
+                    LocationCallbackHandler.notificationCallback,
+                notificationButton1TapCallback:
+                    LocationCallbackHandler.notificationButton1Callback,
+            )));
   }
 }

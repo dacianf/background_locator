@@ -7,9 +7,11 @@ class AndroidNotificationSettings {
   final String notificationTitle;
   final String notificationMsg;
   final String notificationBigMsg;
+  final String notificationButton1Msg;
   final String notificationIcon;
   final Color notificationIconColor;
   final VoidCallback notificationTapCallback;
+  final VoidCallback notificationButton1TapCallback;
 
   /// [notificationTitle] Title of the notification. Only applies for android. Default is 'Start Location Tracking'.
   ///
@@ -24,15 +26,20 @@ class AndroidNotificationSettings {
   ///
   /// [notificationTapCallback] callback for notification tap
   ///
-  const AndroidNotificationSettings(
-      {this.notificationChannelName = 'Location tracking',
-      this.notificationTitle = 'Start Location Tracking',
-      this.notificationMsg = 'Track location in background',
-      this.notificationBigMsg =
-          'Background location is on to keep the app up-tp-date with your location. This is required for main features to work properly when the app is not running.',
-      this.notificationIcon = '',
-      this.notificationIconColor = Colors.grey,
-      this.notificationTapCallback});
+  /// [notificationButton1TapCallback] callback for notification button 1 tap
+  ///
+  const AndroidNotificationSettings({
+    this.notificationChannelName = 'Location tracking',
+    this.notificationTitle = 'Start Location Tracking',
+    this.notificationMsg = 'Track location in background',
+    this.notificationBigMsg =
+        'Background location is on to keep the app up-tp-date with your location. This is required for main features to work properly when the app is not running.',
+    this.notificationIcon = '',
+    this.notificationButton1Msg = 'Flutter',
+    this.notificationIconColor = Colors.grey,
+    this.notificationTapCallback,
+    this.notificationButton1TapCallback,
+  });
 }
 
 class AndroidSettings extends LocatorSettings {
@@ -71,6 +78,8 @@ class AndroidSettings extends LocatorSettings {
           androidNotificationSettings.notificationMsg,
       Keys.SETTINGS_ANDROID_NOTIFICATION_BIG_MSG:
           androidNotificationSettings.notificationBigMsg,
+      Keys.SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG:
+          androidNotificationSettings.notificationButton1Msg,
       Keys.SETTINGS_ANDROID_NOTIFICATION_ICON:
           androidNotificationSettings.notificationIcon,
       Keys.SETTINGS_ANDROID_NOTIFICATION_ICON_COLOR:

@@ -23,48 +23,60 @@ class PreferencesManager {
                     context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
 
             sharedPreferences.edit()
-                    .putLong(Keys.ARG_CALLBACK,
-                            map[Keys.ARG_CALLBACK] as Long)
-                    .apply()
+                .putLong(Keys.ARG_CALLBACK,
+                         map[Keys.ARG_CALLBACK] as Long)
+                .apply()
 
             if (map[Keys.ARG_NOTIFICATION_CALLBACK] as? Long != null) {
                 sharedPreferences.edit()
-                        .putLong(Keys.ARG_NOTIFICATION_CALLBACK,
-                                map[Keys.ARG_NOTIFICATION_CALLBACK] as Long)
-                        .apply()
+                    .putLong(Keys.ARG_NOTIFICATION_CALLBACK,
+                             map[Keys.ARG_NOTIFICATION_CALLBACK] as Long)
+                    .apply()
+            }
+
+            if (map[Keys.ARG_NOTIFICATION_BUTTON_1_CALLBACK] as? Long != null) {
+                sharedPreferences.edit()
+                    .putLong(Keys.ARG_NOTIFICATION_BUTTON_1_CALLBACK,
+                             map[Keys.ARG_NOTIFICATION_BUTTON_1_CALLBACK] as Long)
+                    .apply()
             }
 
             val settings = map[Keys.ARG_SETTINGS] as Map<*, *>
 
             sharedPreferences.edit()
-                    .putString(Keys.SETTINGS_ANDROID_NOTIFICATION_CHANNEL_NAME,
-                            settings[Keys.SETTINGS_ANDROID_NOTIFICATION_CHANNEL_NAME] as String)
+                .putString(Keys.SETTINGS_ANDROID_NOTIFICATION_CHANNEL_NAME,
+                           settings[Keys.SETTINGS_ANDROID_NOTIFICATION_CHANNEL_NAME] as String)
+                .apply()
+
+            sharedPreferences.edit()
+                .putString(Keys.SETTINGS_ANDROID_NOTIFICATION_TITLE,
+                           settings[Keys.SETTINGS_ANDROID_NOTIFICATION_TITLE] as String)
                     .apply()
 
             sharedPreferences.edit()
-                    .putString(Keys.SETTINGS_ANDROID_NOTIFICATION_TITLE,
-                            settings[Keys.SETTINGS_ANDROID_NOTIFICATION_TITLE] as String)
-                    .apply()
+                .putString(Keys.SETTINGS_ANDROID_NOTIFICATION_MSG,
+                           settings[Keys.SETTINGS_ANDROID_NOTIFICATION_MSG] as String)
+                .apply()
 
             sharedPreferences.edit()
-                    .putString(Keys.SETTINGS_ANDROID_NOTIFICATION_MSG,
-                            settings[Keys.SETTINGS_ANDROID_NOTIFICATION_MSG] as String)
-                    .apply()
+                .putString(Keys.SETTINGS_ANDROID_NOTIFICATION_BIG_MSG,
+                           settings[Keys.SETTINGS_ANDROID_NOTIFICATION_BIG_MSG] as String)
+                .apply()
 
             sharedPreferences.edit()
-                    .putString(Keys.SETTINGS_ANDROID_NOTIFICATION_BIG_MSG,
-                            settings[Keys.SETTINGS_ANDROID_NOTIFICATION_BIG_MSG] as String)
-                    .apply()
+                .putString(Keys.SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG,
+                           settings[Keys.SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG] as String)
+                .apply()
 
             sharedPreferences.edit()
-                    .putString(Keys.SETTINGS_ANDROID_NOTIFICATION_ICON,
-                            settings[Keys.SETTINGS_ANDROID_NOTIFICATION_ICON] as String)
-                    .apply()
+                .putString(Keys.SETTINGS_ANDROID_NOTIFICATION_ICON,
+                           settings[Keys.SETTINGS_ANDROID_NOTIFICATION_ICON] as String)
+                .apply()
 
             sharedPreferences.edit()
-                    .putLong(Keys.SETTINGS_ANDROID_NOTIFICATION_ICON_COLOR,
-                            settings[Keys.SETTINGS_ANDROID_NOTIFICATION_ICON_COLOR] as Long)
-                    .apply()
+                .putLong(Keys.SETTINGS_ANDROID_NOTIFICATION_ICON_COLOR,
+                         settings[Keys.SETTINGS_ANDROID_NOTIFICATION_ICON_COLOR] as Long)
+                .apply()
 
             sharedPreferences.edit()
                     .putInt(Keys.SETTINGS_INTERVAL,
@@ -101,31 +113,39 @@ class PreferencesManager {
 
             if (sharedPreferences.contains(Keys.ARG_NOTIFICATION_CALLBACK)) {
                 result[Keys.ARG_NOTIFICATION_CALLBACK] =
-                        sharedPreferences.getLong(Keys.ARG_NOTIFICATION_CALLBACK, 0)
+                    sharedPreferences.getLong(Keys.ARG_NOTIFICATION_CALLBACK, 0)
+            }
+
+            if (sharedPreferences.contains(Keys.ARG_NOTIFICATION_BUTTON_1_CALLBACK)) {
+                result[Keys.ARG_NOTIFICATION_BUTTON_1_CALLBACK] =
+                    sharedPreferences.getLong(Keys.ARG_NOTIFICATION_BUTTON_1_CALLBACK, 0)
             }
 
             val settings = HashMap<String, Any?>()
 
             settings[Keys.SETTINGS_ANDROID_NOTIFICATION_CHANNEL_NAME] =
-                    sharedPreferences.getString(Keys.SETTINGS_ANDROID_NOTIFICATION_CHANNEL_NAME, "")
+                sharedPreferences.getString(Keys.SETTINGS_ANDROID_NOTIFICATION_CHANNEL_NAME, "")
 
             settings[Keys.SETTINGS_ANDROID_NOTIFICATION_TITLE] =
-                    sharedPreferences.getString(Keys.SETTINGS_ANDROID_NOTIFICATION_TITLE, "")
+                sharedPreferences.getString(Keys.SETTINGS_ANDROID_NOTIFICATION_TITLE, "")
 
             settings[Keys.SETTINGS_ANDROID_NOTIFICATION_MSG] =
-                    sharedPreferences.getString(Keys.SETTINGS_ANDROID_NOTIFICATION_MSG, "")
+                sharedPreferences.getString(Keys.SETTINGS_ANDROID_NOTIFICATION_MSG, "")
 
             settings[Keys.SETTINGS_ANDROID_NOTIFICATION_BIG_MSG] =
-                    sharedPreferences.getString(Keys.SETTINGS_ANDROID_NOTIFICATION_BIG_MSG, "")
+                sharedPreferences.getString(Keys.SETTINGS_ANDROID_NOTIFICATION_BIG_MSG, "")
+
+            settings[Keys.SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG] =
+                sharedPreferences.getString(Keys.SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG, "")
 
             settings[Keys.SETTINGS_ANDROID_NOTIFICATION_ICON] =
-                    sharedPreferences.getString(Keys.SETTINGS_ANDROID_NOTIFICATION_ICON, "")
+                sharedPreferences.getString(Keys.SETTINGS_ANDROID_NOTIFICATION_ICON, "")
 
             settings[Keys.SETTINGS_ANDROID_NOTIFICATION_ICON_COLOR] =
-                    sharedPreferences.getLong(Keys.SETTINGS_ANDROID_NOTIFICATION_ICON_COLOR, 0)
+                sharedPreferences.getLong(Keys.SETTINGS_ANDROID_NOTIFICATION_ICON_COLOR, 0)
 
             settings[Keys.SETTINGS_INTERVAL] =
-                    sharedPreferences.getInt(Keys.SETTINGS_INTERVAL, 0)
+                sharedPreferences.getInt(Keys.SETTINGS_INTERVAL, 0)
 
             settings[Keys.SETTINGS_ACCURACY] =
                     sharedPreferences.getInt(Keys.SETTINGS_ACCURACY, 0)
