@@ -72,13 +72,13 @@ class IsolateHolderService : Service() {
                 if (initCallback != null) {
                     val initialDataMap = BackgroundLocatorPlugin.getDataCallback(context, INIT_DATA_CALLBACK_KEY)
                     val backgroundChannel = MethodChannel(sBackgroundFlutterEngine!!.dartExecutor.binaryMessenger,
-                                                          BACKGROUND_CHANNEL_ID)
+                            BACKGROUND_CHANNEL_ID)
                     Handler(context.mainLooper)
-                        .post {
-                            backgroundChannel.invokeMethod(BCM_INIT,
-                                                           hashMapOf(ARG_INIT_CALLBACK to initCallback,
-                                                                     ARG_INIT_DATA_CALLBACK to initialDataMap))
-                        }
+                            .post {
+                                backgroundChannel.invokeMethod(BCM_INIT,
+                                        hashMapOf(ARG_INIT_CALLBACK to initCallback,
+                                                ARG_INIT_DATA_CALLBACK to initialDataMap))
+                            }
                 }
                 isSendedInit = true
             }
@@ -89,7 +89,7 @@ class IsolateHolderService : Service() {
     private var notificationTitle = "Start Location Tracking"
     private var notificationMsg = "Track location in background"
     private var notificationBigMsg =
-        "Background location is on to keep the app up-tp-date with your location. This is required for main features to work properly when the app is not running."
+            "Background location is on to keep the app up-tp-date with your location. This is required for main features to work properly when the app is not running."
     private var notificationButtonMsg = "Button1"
     private var hasNotificationButtons = true
     private var notificationIconColor = 0
@@ -127,10 +127,10 @@ class IsolateHolderService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Notification channel is available in Android O and up
             val channel = NotificationChannel(CHANNEL_ID, notificationChannelName,
-                                              NotificationManager.IMPORTANCE_LOW)
+                    NotificationManager.IMPORTANCE_LOW)
 
             (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
-                .createNotificationChannel(channel)
+                    .createNotificationChannel(channel)
         }
 
         val intent = Intent(this, getMainActivityClass(this))
@@ -140,24 +140,24 @@ class IsolateHolderService : Service() {
         actionButton1.action = NOTIFICATION_ACTION_BUTTON_1
 
         val pendingIntent: PendingIntent = PendingIntent.getActivity(this,
-                                                                     1, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                1, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         val actionButtonIntent1: PendingIntent = PendingIntent.getActivity(this,
-                                                                           1,
-                                                                           actionButton1,
-                                                                           PendingIntent.FLAG_UPDATE_CURRENT)
+                1,
+                actionButton1,
+                PendingIntent.FLAG_UPDATE_CURRENT)
 
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle(notificationTitle)
-            .setContentText(notificationMsg)
-            .setStyle(NotificationCompat.BigTextStyle()
-                          .bigText(notificationBigMsg))
-            .setSmallIcon(icon)
-            .setColor(notificationIconColor)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setContentIntent(pendingIntent)
-            .setOnlyAlertOnce(true) // so when data is updated don't make sound and alert in android 8.0+
-            .setOngoing(true)
+                .setContentTitle(notificationTitle)
+                .setContentText(notificationMsg)
+                .setStyle(NotificationCompat.BigTextStyle()
+                        .bigText(notificationBigMsg))
+                .setSmallIcon(icon)
+                .setColor(notificationIconColor)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setContentIntent(pendingIntent)
+                .setOnlyAlertOnce(true) // so when data is updated don't make sound and alert in android 8.0+
+                .setOngoing(true)
 
         if (hasNotificationButtons) {
             notification.addAction(0, notificationButtonMsg, actionButtonIntent1)
@@ -175,12 +175,12 @@ class IsolateHolderService : Service() {
             val disposeCallback = BackgroundLocatorPlugin.getCallbackHandle(context, DISPOSE_CALLBACK_HANDLE_KEY)
             if (disposeCallback != null && sBackgroundFlutterEngine != null) {
                 val backgroundChannel = MethodChannel(sBackgroundFlutterEngine!!.dartExecutor.binaryMessenger,
-                                                      BACKGROUND_CHANNEL_ID)
+                        BACKGROUND_CHANNEL_ID)
                 Handler(context.mainLooper)
-                    .post {
-                        backgroundChannel.invokeMethod(BCM_DISPOSE,
-                                                       hashMapOf(ARG_DISPOSE_CALLBACK to disposeCallback))
-                    }
+                        .post {
+                            backgroundChannel.invokeMethod(BCM_DISPOSE,
+                                    hashMapOf(ARG_DISPOSE_CALLBACK to disposeCallback))
+                        }
             }
         }
     }
@@ -191,10 +191,10 @@ class IsolateHolderService : Service() {
         }
 
         when {
-            ACTION_SHUTDOWN == intent.action            -> {
+            ACTION_SHUTDOWN == intent.action -> {
                 shutdownHolderService()
             }
-            ACTION_START == intent.action               -> {
+            ACTION_START == intent.action -> {
                 startHolderService(intent)
             }
             ACTION_UPDATE_NOTIFICATION == intent.action -> {
@@ -212,14 +212,14 @@ class IsolateHolderService : Service() {
         notificationBigMsg = intent.getStringExtra(SETTINGS_ANDROID_NOTIFICATION_BIG_MSG)
         notificationButtonMsg = intent.getStringExtra(SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG)
         hasNotificationButtons = intent.getBooleanExtra(SETTINGS_ANDROID_HAS_NOTIFICATION_BUTTONS, false)
-        val iconNameDefault = "ic_launcher"
+        val iconNameDefault = "ic_stat_name"
         var iconName = intent.getStringExtra(SETTINGS_ANDROID_NOTIFICATION_ICON)
         if (iconName == null || iconName.isEmpty()) {
             iconName = iconNameDefault
         }
-        icon = resources.getIdentifier(iconName, "mipmap", packageName)
+        icon = resources.getIdentifier(iconName, "drawable", packageName)
         notificationIconColor = intent.getLongExtra(SETTINGS_ANDROID_NOTIFICATION_ICON_COLOR, 0)
-            .toInt()
+                .toInt()
         wakeLockTime = intent.getIntExtra(SETTINGS_ANDROID_WAKE_LOCK_TIME, 60) * 60 * 1000L
         start()
     }
