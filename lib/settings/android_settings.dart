@@ -11,7 +11,7 @@ class AndroidNotificationSettings {
   final String notificationBigMsg;
   final String notificationIcon;
   final Color notificationIconColor;
-  final VoidCallback? notificationTapCallback;
+  final VoidCallback notificationTapCallback;
 
   /// [notificationTitle] Title of the notification. Only applies for android. Default is 'Start Location Tracking'.
   ///

@@ -8,7 +8,7 @@ import 'package:background_locator/settings/ios_settings.dart';
 
 class SettingsUtil {
   static Map<String, dynamic> getArgumentsMap(
-      {required void Function(LocationDto) callback,
+      {void Function(LocationDto) callback,
 
       AndroidSettings androidSettings = const AndroidSettings(),
       IOSSettings iosSettings = const IOSSettings()}) {
@@ -25,11 +25,11 @@ class SettingsUtil {
   }
 
   static Map<String, dynamic> _getCommonArgumentsMap({
-    required void Function(LocationDto) callback,
+     void Function(LocationDto) callback,
   }) {
     final Map<String, dynamic> args = {
       Keys.ARG_CALLBACK:
-          PluginUtilities.getCallbackHandle(callback)!.toRawHandle(),
+          PluginUtilities.getCallbackHandle(callback).toRawHandle(),
     };
 
     return args;
@@ -45,7 +45,7 @@ class SettingsUtil {
         null) {
       args[Keys.ARG_NOTIFICATION_CALLBACK] = PluginUtilities.getCallbackHandle(
               androidSettings
-                  .androidNotificationSettings.notificationTapCallback!)!
+                  .androidNotificationSettings.notificationTapCallback)
           .toRawHandle();
     }
 
