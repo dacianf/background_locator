@@ -49,6 +49,15 @@ class SettingsUtil {
           .toRawHandle();
     }
 
+    if (androidSettings
+            .androidNotificationSettings.notificationButton1TapCallback !=
+        null) {
+      args[Keys.ARG_NOTIFICATION_BUTTON_1_CALLBACK] =
+          PluginUtilities.getCallbackHandle(androidSettings
+                  .androidNotificationSettings.notificationButton1TapCallback)
+              .toRawHandle();
+    }
+
     return args;
   }
 

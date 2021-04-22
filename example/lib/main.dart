@@ -220,7 +220,13 @@ class _MyAppState extends State<MyApp> {
                 notificationBigMsg:
                     'Background location is on to keep the app up-tp-date with your location. This is required for main features to work properly when the app is not running.',
                 notificationIconColor: Colors.grey,
+                // Notification buttons will be visible only if this flag
+                // is set on true
+                hasNotificationButtons: true,
                 notificationTapCallback:
-                    LocationCallbackHandler.notificationCallback)));
+                    LocationCallbackHandler.notificationCallback,
+                notificationButton1TapCallback:
+                    LocationCallbackHandler.notificationButton1Callback,
+            )));
   }
 }

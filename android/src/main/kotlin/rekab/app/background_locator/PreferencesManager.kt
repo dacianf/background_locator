@@ -8,97 +8,120 @@ class PreferencesManager {
         private const val PREF_NAME = "background_locator"
 
         @JvmStatic
+        private var isServiceRunning = false
+
+        @JvmStatic
+        private var isServiceRegistered = false
+
+        @JvmStatic
         fun saveCallbackDispatcher(context: Context, map: Map<Any, Any>) {
             val sharedPreferences =
-                    context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+                context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
 
             sharedPreferences.edit()
-                    .putLong(Keys.ARG_CALLBACK_DISPATCHER,
-                            map[Keys.ARG_CALLBACK_DISPATCHER] as Long)
-                    .apply()
+                .putLong(Keys.ARG_CALLBACK_DISPATCHER,
+                         map[Keys.ARG_CALLBACK_DISPATCHER] as Long)
+                .apply()
         }
 
         @JvmStatic
         fun saveSettings(context: Context, map: Map<Any, Any>) {
             val sharedPreferences =
-                    context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+                context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
 
             sharedPreferences.edit()
-                    .putLong(Keys.ARG_CALLBACK,
-                            map[Keys.ARG_CALLBACK] as Long)
-                    .apply()
+                .putLong(Keys.ARG_CALLBACK,
+                         map[Keys.ARG_CALLBACK] as Long)
+                .apply()
 
             if (map[Keys.ARG_NOTIFICATION_CALLBACK] as? Long != null) {
                 sharedPreferences.edit()
-                        .putLong(Keys.ARG_NOTIFICATION_CALLBACK,
-                                map[Keys.ARG_NOTIFICATION_CALLBACK] as Long)
-                        .apply()
+                    .putLong(Keys.ARG_NOTIFICATION_CALLBACK,
+                             map[Keys.ARG_NOTIFICATION_CALLBACK] as Long)
+                    .apply()
+            }
+
+            if (map[Keys.ARG_NOTIFICATION_BUTTON_1_CALLBACK] as? Long != null) {
+                sharedPreferences.edit()
+                    .putLong(Keys.ARG_NOTIFICATION_BUTTON_1_CALLBACK,
+                             map[Keys.ARG_NOTIFICATION_BUTTON_1_CALLBACK] as Long)
+                    .apply()
             }
 
             val settings = map[Keys.ARG_SETTINGS] as Map<*, *>
 
             sharedPreferences.edit()
-                    .putString(Keys.SETTINGS_ANDROID_NOTIFICATION_CHANNEL_NAME,
-                            settings[Keys.SETTINGS_ANDROID_NOTIFICATION_CHANNEL_NAME] as String)
-                    .apply()
+                .putString(Keys.SETTINGS_ANDROID_NOTIFICATION_CHANNEL_NAME,
+                           settings[Keys.SETTINGS_ANDROID_NOTIFICATION_CHANNEL_NAME] as String)
+                .apply()
 
             sharedPreferences.edit()
-                    .putString(Keys.SETTINGS_ANDROID_NOTIFICATION_TITLE,
-                            settings[Keys.SETTINGS_ANDROID_NOTIFICATION_TITLE] as String)
-                    .apply()
+                .putString(Keys.SETTINGS_ANDROID_NOTIFICATION_TITLE,
+                           settings[Keys.SETTINGS_ANDROID_NOTIFICATION_TITLE] as String)
+                .apply()
 
             sharedPreferences.edit()
-                    .putString(Keys.SETTINGS_ANDROID_NOTIFICATION_MSG,
-                            settings[Keys.SETTINGS_ANDROID_NOTIFICATION_MSG] as String)
-                    .apply()
+                .putString(Keys.SETTINGS_ANDROID_NOTIFICATION_MSG,
+                           settings[Keys.SETTINGS_ANDROID_NOTIFICATION_MSG] as String)
+                .apply()
 
             sharedPreferences.edit()
-                    .putString(Keys.SETTINGS_ANDROID_NOTIFICATION_BIG_MSG,
-                            settings[Keys.SETTINGS_ANDROID_NOTIFICATION_BIG_MSG] as String)
-                    .apply()
+                .putString(Keys.SETTINGS_ANDROID_NOTIFICATION_BIG_MSG,
+                           settings[Keys.SETTINGS_ANDROID_NOTIFICATION_BIG_MSG] as String)
+                .apply()
 
             sharedPreferences.edit()
-                    .putString(Keys.SETTINGS_ANDROID_NOTIFICATION_ICON,
-                            settings[Keys.SETTINGS_ANDROID_NOTIFICATION_ICON] as String)
-                    .apply()
+                .putString(Keys.SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG,
+                           settings[Keys.SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG] as String)
+                .apply()
 
             sharedPreferences.edit()
-                    .putLong(Keys.SETTINGS_ANDROID_NOTIFICATION_ICON_COLOR,
-                            settings[Keys.SETTINGS_ANDROID_NOTIFICATION_ICON_COLOR] as Long)
-                    .apply()
+                .putBoolean(Keys.SETTINGS_ANDROID_HAS_NOTIFICATION_BUTTONS,
+                            settings[Keys.SETTINGS_ANDROID_HAS_NOTIFICATION_BUTTONS] as Boolean)
+                .apply()
 
             sharedPreferences.edit()
-                    .putInt(Keys.SETTINGS_INTERVAL,
-                            settings[Keys.SETTINGS_INTERVAL] as Int)
-                    .apply()
+                .putString(Keys.SETTINGS_ANDROID_NOTIFICATION_ICON,
+                           settings[Keys.SETTINGS_ANDROID_NOTIFICATION_ICON] as String)
+                .apply()
 
             sharedPreferences.edit()
-                    .putInt(Keys.SETTINGS_ACCURACY,
-                            settings[Keys.SETTINGS_ACCURACY] as Int)
-                    .apply()
+                .putLong(Keys.SETTINGS_ANDROID_NOTIFICATION_ICON_COLOR,
+                         settings[Keys.SETTINGS_ANDROID_NOTIFICATION_ICON_COLOR] as Long)
+                .apply()
 
             sharedPreferences.edit()
-                    .putFloat(Keys.SETTINGS_DISTANCE_FILTER,
-                            (settings[Keys.SETTINGS_DISTANCE_FILTER] as Double).toFloat())
-                    .apply()
+                .putInt(Keys.SETTINGS_INTERVAL,
+                        settings[Keys.SETTINGS_INTERVAL] as Int)
+                .apply()
+
+            sharedPreferences.edit()
+                .putInt(Keys.SETTINGS_ACCURACY,
+                        settings[Keys.SETTINGS_ACCURACY] as Int)
+                .apply()
+
+            sharedPreferences.edit()
+                .putFloat(Keys.SETTINGS_DISTANCE_FILTER,
+                          (settings[Keys.SETTINGS_DISTANCE_FILTER] as Double).toFloat())
+                .apply()
 
             if (settings.containsKey(Keys.SETTINGS_ANDROID_WAKE_LOCK_TIME)) {
                 sharedPreferences.edit()
-                        .putInt(Keys.SETTINGS_ANDROID_WAKE_LOCK_TIME,
-                                settings[Keys.SETTINGS_ANDROID_WAKE_LOCK_TIME] as Int)
-                        .apply()
+                    .putInt(Keys.SETTINGS_ANDROID_WAKE_LOCK_TIME,
+                            settings[Keys.SETTINGS_ANDROID_WAKE_LOCK_TIME] as Int)
+                    .apply()
             }
 
             sharedPreferences.edit()
-                    .putInt(Keys.SETTINGS_ANDROID_LOCATION_CLIENT,
-                            settings[Keys.SETTINGS_ANDROID_LOCATION_CLIENT] as Int)
-                    .apply()
+                .putInt(Keys.SETTINGS_ANDROID_LOCATION_CLIENT,
+                        settings[Keys.SETTINGS_ANDROID_LOCATION_CLIENT] as Int)
+                .apply()
         }
 
         @JvmStatic
         fun getSettings(context: Context): Map<Any, Any> {
             val sharedPreferences =
-                    context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+                context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
 
             val result = HashMap<Any, Any>()
 
@@ -107,44 +130,57 @@ class PreferencesManager {
 
             if (sharedPreferences.contains(Keys.ARG_NOTIFICATION_CALLBACK)) {
                 result[Keys.ARG_NOTIFICATION_CALLBACK] =
-                        sharedPreferences.getLong(Keys.ARG_NOTIFICATION_CALLBACK, 0)
+                    sharedPreferences.getLong(Keys.ARG_NOTIFICATION_CALLBACK, 0)
+            }
+
+            if (sharedPreferences.contains(Keys.ARG_NOTIFICATION_BUTTON_1_CALLBACK)) {
+                result[Keys.ARG_NOTIFICATION_BUTTON_1_CALLBACK] =
+                    sharedPreferences.getLong(Keys.ARG_NOTIFICATION_BUTTON_1_CALLBACK, 0)
             }
 
             val settings = HashMap<String, Any?>()
 
             settings[Keys.SETTINGS_ANDROID_NOTIFICATION_CHANNEL_NAME] =
-                    sharedPreferences.getString(Keys.SETTINGS_ANDROID_NOTIFICATION_CHANNEL_NAME, "")
+                sharedPreferences.getString(Keys.SETTINGS_ANDROID_NOTIFICATION_CHANNEL_NAME, "")
 
             settings[Keys.SETTINGS_ANDROID_NOTIFICATION_TITLE] =
-                    sharedPreferences.getString(Keys.SETTINGS_ANDROID_NOTIFICATION_TITLE, "")
+                sharedPreferences.getString(Keys.SETTINGS_ANDROID_NOTIFICATION_TITLE, "")
 
             settings[Keys.SETTINGS_ANDROID_NOTIFICATION_MSG] =
-                    sharedPreferences.getString(Keys.SETTINGS_ANDROID_NOTIFICATION_MSG, "")
+                sharedPreferences.getString(Keys.SETTINGS_ANDROID_NOTIFICATION_MSG, "")
 
             settings[Keys.SETTINGS_ANDROID_NOTIFICATION_BIG_MSG] =
-                    sharedPreferences.getString(Keys.SETTINGS_ANDROID_NOTIFICATION_BIG_MSG, "")
+                sharedPreferences.getString(Keys.SETTINGS_ANDROID_NOTIFICATION_BIG_MSG, "")
+
+            settings[Keys.SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG] =
+                sharedPreferences.getString(Keys.SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG, "")
+
+            settings[Keys.SETTINGS_ANDROID_HAS_NOTIFICATION_BUTTONS] =
+                sharedPreferences.getBoolean(Keys.SETTINGS_ANDROID_HAS_NOTIFICATION_BUTTONS, false)
 
             settings[Keys.SETTINGS_ANDROID_NOTIFICATION_ICON] =
-                    sharedPreferences.getString(Keys.SETTINGS_ANDROID_NOTIFICATION_ICON, "")
+                sharedPreferences.getString(Keys.SETTINGS_ANDROID_NOTIFICATION_ICON, "")
 
             settings[Keys.SETTINGS_ANDROID_NOTIFICATION_ICON_COLOR] =
-                    sharedPreferences.getLong(Keys.SETTINGS_ANDROID_NOTIFICATION_ICON_COLOR, 0)
+                sharedPreferences.getLong(Keys.SETTINGS_ANDROID_NOTIFICATION_ICON_COLOR, 0)
 
             settings[Keys.SETTINGS_INTERVAL] =
-                    sharedPreferences.getInt(Keys.SETTINGS_INTERVAL, 0)
+                sharedPreferences.getInt(Keys.SETTINGS_INTERVAL, 0)
 
             settings[Keys.SETTINGS_ACCURACY] =
-                    sharedPreferences.getInt(Keys.SETTINGS_ACCURACY, 0)
+                sharedPreferences.getInt(Keys.SETTINGS_ACCURACY, 0)
 
             settings[Keys.SETTINGS_DISTANCE_FILTER] =
-                    sharedPreferences.getFloat(Keys.SETTINGS_DISTANCE_FILTER, 0f).toDouble()
+                sharedPreferences.getFloat(Keys.SETTINGS_DISTANCE_FILTER, 0f)
+                    .toDouble()
 
             if (sharedPreferences.contains(Keys.SETTINGS_ANDROID_WAKE_LOCK_TIME)) {
-                settings[Keys.SETTINGS_ANDROID_WAKE_LOCK_TIME] = sharedPreferences.getInt(Keys.SETTINGS_ANDROID_WAKE_LOCK_TIME, 0)
+                settings[Keys.SETTINGS_ANDROID_WAKE_LOCK_TIME] =
+                    sharedPreferences.getInt(Keys.SETTINGS_ANDROID_WAKE_LOCK_TIME, 0)
             }
 
             settings[Keys.SETTINGS_ANDROID_LOCATION_CLIENT] =
-                    sharedPreferences.getInt(Keys.SETTINGS_ANDROID_LOCATION_CLIENT, 0)
+                sharedPreferences.getInt(Keys.SETTINGS_ANDROID_LOCATION_CLIENT, 0)
 
             result[Keys.ARG_SETTINGS] = settings
             return result
@@ -153,22 +189,26 @@ class PreferencesManager {
         @JvmStatic
         fun getLocationClient(context: Context): LocationClient {
             val sharedPreferences =
-                    context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+                context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
             val client = sharedPreferences.getInt(Keys.SETTINGS_ANDROID_LOCATION_CLIENT, 0)
             return LocationClient.fromInt(client) ?: LocationClient.Google
         }
 
         @JvmStatic
         fun isServiceRunning(context: Context): Boolean {
+            return isServiceRunning
             return context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
-                    .getBoolean(Keys.PREF_SERVICE_IS_RUNNING, false)
+                .getBoolean(Keys.PREF_SERVICE_IS_RUNNING, false)
         }
 
         @JvmStatic
         fun setServiceRunning(context: Context, running: Boolean) {
+            isServiceRunning = running
+            return
             context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
-                    .edit().putBoolean(Keys.PREF_SERVICE_IS_RUNNING, running)
-                    .apply()
+                .edit()
+                .putBoolean(Keys.PREF_SERVICE_IS_RUNNING, running)
+                .apply()
         }
     }
 }

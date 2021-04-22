@@ -15,6 +15,9 @@ class Keys {
         val NOTIFICATION_CALLBACK_HANDLE_KEY = "NOTIFICATION_CALLBACK_HANDLE_KEY"
 
         @JvmStatic
+        val NOTIFICATION_BUTTON_1_CALLBACK_HANDLE_KEY = "NOTIFICATION_BUTTON_1_CALLBACK_HANDLE_KEY"
+
+        @JvmStatic
         val CHANNEL_ID = "app.rekab/locator_plugin"
 
         @JvmStatic
@@ -75,6 +78,9 @@ class Keys {
         val ARG_NOTIFICATION_CALLBACK = "notificationCallback"
 
         @JvmStatic
+        val ARG_NOTIFICATION_BUTTON_1_CALLBACK = "notificationButton1Callback"
+
+        @JvmStatic
         val ARG_LOCATION = "location"
 
         @JvmStatic
@@ -106,6 +112,12 @@ class Keys {
         val SETTINGS_ANDROID_NOTIFICATION_BIG_MSG = "settings_android_notificationBigMsg"
 
         @JvmStatic
+        val SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG = "settings_android_notificationButtonMsg"
+
+        @JvmStatic
+        val SETTINGS_ANDROID_HAS_NOTIFICATION_BUTTONS = "settings_android_has_notification_buttons"
+
+        @JvmStatic
         val SETTINGS_ANDROID_NOTIFICATION_ICON = "settings_android_notificationIcon"
 
         @JvmStatic
@@ -124,7 +136,13 @@ class Keys {
         val BCM_NOTIFICATION_CLICK = "BCM_NOTIFICATION_CLICK"
 
         @JvmStatic
+        val BCM_NOTIFICATION_BUTTON1_CLICK = "BCM_NOTIFICATION_BUTTON1_CLICK"
+
+        @JvmStatic
         val NOTIFICATION_ACTION = "com.rekab.background_locator.notification"
+
+        @JvmStatic
+        val NOTIFICATION_ACTION_BUTTON_1 = "com.rekab.background_locator.notificationButton1Action"
 
         @JvmStatic
         val PREF_SERVICE_IS_RUNNING = "com.rekab.background_locator.serviceIsRunning"

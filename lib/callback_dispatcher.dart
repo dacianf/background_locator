@@ -28,6 +28,14 @@ void callbackDispatcher() {
       if (notificationCallback != null) {
         notificationCallback();
       }
+    } else if (Keys.BCM_NOTIFICATION_BUTTON1_CLICK == call.method) {
+      final Map<dynamic, dynamic> args = call.arguments;
+      final Function notificationButton1Callback =
+          PluginUtilities.getCallbackFromHandle(CallbackHandle.fromRawHandle(
+              args[Keys.ARG_NOTIFICATION_BUTTON_1_CALLBACK]));
+      if (notificationButton1Callback != null) {
+        notificationButton1Callback();
+      }
     }
   });
   _backgroundChannel.invokeMethod(Keys.METHOD_SERVICE_INITIALIZED);

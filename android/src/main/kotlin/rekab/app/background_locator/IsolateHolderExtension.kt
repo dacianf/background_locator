@@ -20,9 +20,9 @@ internal fun IsolateHolderService.startLocatorService(context: Context) {
         if (IsolateHolderService.backgroundEngine == null) {
 
             val callbackHandle = context.getSharedPreferences(
-                    Keys.SHARED_PREFERENCES_KEY,
-                    Context.MODE_PRIVATE)
-                    .getLong(Keys.CALLBACK_DISPATCHER_HANDLE_KEY, 0)
+                Keys.SHARED_PREFERENCES_KEY,
+                Context.MODE_PRIVATE)
+                .getLong(Keys.CALLBACK_DISPATCHER_HANDLE_KEY, 0)
             val callbackInfo = FlutterCallbackInformation.lookupCallbackInformation(callbackHandle)
 
             // We need flutter engine to handle callback, so if it is not available we have to create a
@@ -30,17 +30,17 @@ internal fun IsolateHolderService.startLocatorService(context: Context) {
             IsolateHolderService.backgroundEngine = FlutterEngine(context)
 
             val args = DartExecutor.DartCallback(
-                    context.assets,
-                    FlutterInjector.instance().flutterLoader().findAppBundlePath(),
-                    callbackInfo
+                context.assets,
+                FlutterInjector.instance().flutterLoader().findAppBundlePath(),
+                callbackInfo
             )
             IsolateHolderService.backgroundEngine?.dartExecutor?.executeDartCallback(args)
         }
     }
 
     backgroundChannel =
-            MethodChannel(IsolateHolderService.backgroundEngine?.dartExecutor?.binaryMessenger,
-                    Keys.BACKGROUND_CHANNEL_ID)
+        MethodChannel(IsolateHolderService.backgroundEngine?.dartExecutor?.binaryMessenger,
+                      Keys.BACKGROUND_CHANNEL_ID)
     backgroundChannel.setMethodCallHandler(this)
 }
 

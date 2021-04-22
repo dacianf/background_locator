@@ -40,11 +40,14 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
     private var notificationChannelName = "Flutter Locator Plugin"
     private var notificationTitle = "Start Location Tracking"
     private var notificationMsg = "Track location in background"
-    private var notificationBigMsg = "Background location is on to keep the app up-tp-date with your location. This is required for main features to work properly when the app is not running."
+    private var notificationBigMsg =
+            "Background location is on to keep the app up-tp-date with your location. This is required for main features to work properly when the app is not running."
+    private var notificationButtonMsg = "Button1"
+    private var hasNotificationButtons = true
     private var notificationIconColor = 0
     private var icon = 0
     private var wakeLockTime = 60 * 60 * 1000L // 1 hour default wake lock time
-    private lateinit var locatorClient: BLLocationProvider? = null
+    private var locatorClient: BLLocationProvider? = null
     internal lateinit var backgroundChannel: MethodChannel
     internal lateinit var context: Context
 
@@ -90,10 +93,18 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
         val intent = Intent(this, getMainActivityClass(this))
         intent.action = Keys.NOTIFICATION_ACTION
 
+        val actionButton1 = Intent(this, getMainActivityClass(this))
+        actionButton1.action = Keys.NOTIFICATION_ACTION_BUTTON_1
+
         val pendingIntent: PendingIntent = PendingIntent.getActivity(this,
                 1, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        return NotificationCompat.Builder(this, Keys.CHANNEL_ID)
+        val actionButtonIntent1: PendingIntent = PendingIntent.getActivity(this,
+                1,
+                actionButton1,
+                PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val notification = NotificationCompat.Builder(this, Keys.CHANNEL_ID)
                 .setContentTitle(notificationTitle)
                 .setContentText(notificationMsg)
                 .setStyle(NotificationCompat.BigTextStyle()
@@ -104,7 +115,12 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
                 .setContentIntent(pendingIntent)
                 .setOnlyAlertOnce(true) // so when data is updated don't make sound and alert in android 8.0+
                 .setOngoing(true)
-                .build()
+
+        if (hasNotificationButtons) {
+            notification.addAction(0, notificationButtonMsg, actionButtonIntent1)
+        }
+
+        return notification.build()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -134,12 +150,14 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
         notificationTitle = intent.getStringExtra(Keys.SETTINGS_ANDROID_NOTIFICATION_TITLE).toString()
         notificationMsg = intent.getStringExtra(Keys.SETTINGS_ANDROID_NOTIFICATION_MSG).toString()
         notificationBigMsg = intent.getStringExtra(Keys.SETTINGS_ANDROID_NOTIFICATION_BIG_MSG).toString()
-        val iconNameDefault = "ic_launcher"
+        notificationButtonMsg = intent.getStringExtra(Keys.SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG).toString()
+        hasNotificationButtons = intent.getBooleanExtra(Keys.SETTINGS_ANDROID_HAS_NOTIFICATION_BUTTONS, false)
+        val iconNameDefault = "ic_stat_name"
         var iconName = intent.getStringExtra(Keys.SETTINGS_ANDROID_NOTIFICATION_ICON)
         if (iconName == null || iconName.isEmpty()) {
             iconName = iconNameDefault
         }
-        icon = resources.getIdentifier(iconName, "mipmap", packageName)
+        icon = resources.getIdentifier(iconName, "drawable", packageName)
         notificationIconColor = intent.getLongExtra(Keys.SETTINGS_ANDROID_NOTIFICATION_ICON_COLOR, 0).toInt()
         wakeLockTime = intent.getIntExtra(Keys.SETTINGS_ANDROID_WAKE_LOCK_TIME, 60) * 60 * 1000L
 
@@ -175,6 +193,14 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
 
         if (intent.hasExtra(Keys.SETTINGS_ANDROID_NOTIFICATION_BIG_MSG)) {
             notificationBigMsg = intent.getStringExtra(Keys.SETTINGS_ANDROID_NOTIFICATION_BIG_MSG).toString()
+        }
+
+        if (intent.hasExtra(Keys.SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG)) {
+            notificationButtonMsg = intent.getStringExtra(Keys.SETTINGS_ANDROID_NOTIFICATION_BUTTON_MSG).toString()
+        }
+
+        if (intent.hasExtra(Keys.SETTINGS_ANDROID_HAS_NOTIFICATION_BUTTONS)) {
+            hasNotificationButtons = intent.getBooleanExtra(Keys.SETTINGS_ANDROID_HAS_NOTIFICATION_BUTTONS, false)
         }
 
         val notification = getNotification()
