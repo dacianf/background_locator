@@ -1,6 +1,10 @@
 package rekab.app.background_locator
 
-import android.app.*
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -11,12 +15,17 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import io.flutter.FlutterInjector
 import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
-import rekab.app.background_locator.provider.*
-import java.util.HashMap
+import rekab.app.background_locator.provider.AndroidLocationProviderClient
+import rekab.app.background_locator.provider.BLLocationProvider
+import rekab.app.background_locator.provider.GoogleLocationProviderClient
+import rekab.app.background_locator.provider.LocationClient
+import rekab.app.background_locator.provider.LocationUpdateListener
+import java.util.*
 
-class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateListener, Service() {
+class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateListener, EventChannel.StreamHandler, Service() {
     companion object {
         @JvmStatic
         val ACTION_SHUTDOWN = "SHUTDOWN"
@@ -49,8 +58,10 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
     private var wakeLockTime = 60 * 60 * 1000L // 1 hour default wake lock time
     private var locatorClient: BLLocationProvider? = null
     internal lateinit var backgroundChannel: MethodChannel
-    internal lateinit var context: Context
+    internal lateinit var loggerChannel: EventChannel
 
+    internal lateinit var context: Context
+    private var sink: EventChannel.EventSink? = null
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
@@ -59,10 +70,14 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
         super.onCreate()
         startLocatorService(this)
         startForeground(notificationId, getNotification())
+        loggerChannel.setStreamHandler(this)
+        log("isolateHandler", "onCreate")
     }
 
     private fun start() {
+        log("isolateHandler", "start")
         if (PreferencesManager.isServiceRunning(this)) {
+            log("isolateHandler", "isAlready Running")
             return
         }
 
@@ -70,12 +85,15 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
             newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, WAKELOCK_TAG).apply {
                 setReferenceCounted(false)
                 acquire(wakeLockTime)
+                log("isolateHandler", "Wake lock acquired")
             }
         }
 
         // Starting Service as foreground with a notification prevent service from closing
         val notification = getNotification()
+        log("isolateHandler", "Built notification")
         startForeground(notificationId, notification)
+        log("isolateHandler", "Starting foreground")
 
         PreferencesManager.setServiceRunning(this, true)
     }
@@ -127,17 +145,20 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
         if (intent == null) {
             return super.onStartCommand(intent, flags, startId)
         }
-
+        log("isolateHandler", "On start comm")
         when {
             ACTION_SHUTDOWN == intent.action -> {
                 shutdownHolderService()
+                log("isolateHandler", "On start comm - shutdown")
             }
             ACTION_START == intent.action -> {
                 startHolderService(intent)
+                log("isolateHandler", "On start comm - start")
             }
             ACTION_UPDATE_NOTIFICATION == intent.action -> {
                 if (PreferencesManager.isServiceRunning(this)) {
                     updateNotification(intent)
+                    log("isolateHandler", "On start comm - update")
                 }
             }
         }
@@ -240,8 +261,14 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
 
     private fun getLocationClient(context: Context): BLLocationProvider {
         return when (PreferencesManager.getLocationClient(context)) {
-            LocationClient.Google -> GoogleLocationProviderClient(context, this)
-            LocationClient.Android -> AndroidLocationProviderClient(context, this)
+            LocationClient.Google -> {
+                log("isolateHandler", "Location client - Google")
+                GoogleLocationProviderClient(context, this)
+            }
+            LocationClient.Android -> {
+                log("isolateHandler", "Location client - Android")
+                AndroidLocationProviderClient(context, this)
+            }
         }
     }
 
@@ -258,7 +285,7 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
             val result: HashMap<Any, Any> =
                     hashMapOf(Keys.ARG_CALLBACK to callback,
                             Keys.ARG_LOCATION to location)
-
+            log("isolateHandler", "New location")
             sendLocationEvent(result)
         }
     }
@@ -272,12 +299,28 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
         if (backgroundEngine != null) {
             val backgroundChannel =
                     MethodChannel(backgroundEngine?.dartExecutor?.binaryMessenger, Keys.BACKGROUND_CHANNEL_ID)
+            log("isolateHandler", "Send location")
             Handler(context.mainLooper)
                     .post {
                         Log.d("plugin", "sendLocationEvent $result")
                         backgroundChannel.invokeMethod(Keys.BCM_SEND_LOCATION, result)
                     }
         }
+    }
+
+    private fun log(key: String, message: String) {
+        Handler(context.mainLooper)
+                .post {
+                    sink?.success(mapOf("key" to key, "value" to message))
+                }
+    }
+
+    override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+        sink = events
+    }
+
+    override fun onCancel(arguments: Any?) {
+        sink = null
     }
 
 }
