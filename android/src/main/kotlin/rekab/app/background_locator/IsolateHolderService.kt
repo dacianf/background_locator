@@ -44,6 +44,9 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
 
         @JvmStatic
         private val notificationId = 1
+
+        @JvmStatic
+        var sink: EventChannel.EventSink? = null
     }
 
     private var notificationChannelName = "Flutter Locator Plugin"
@@ -61,7 +64,7 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
     internal lateinit var loggerChannel: EventChannel
 
     internal lateinit var context: Context
-    private var sink: EventChannel.EventSink? = null
+
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
@@ -145,7 +148,6 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
         if (intent == null) {
             return super.onStartCommand(intent, flags, startId)
         }
-        log("isolateHandler", "On start comm")
         when {
             ACTION_SHUTDOWN == intent.action -> {
                 shutdownHolderService()
@@ -196,7 +198,7 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
                 }
             }
         }
-
+        log("isolateHandler", "Shutdown Holder Service")
         locatorClient?.removeLocationUpdates()
         PreferencesManager.setServiceRunning(this, false)
         stopForeground(true)
@@ -237,6 +239,7 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
         return try {
             Class.forName(className)
         } catch (e: ClassNotFoundException) {
+            log("isolateHandler", "ERROR ${e.localizedMessage}")
             e.printStackTrace()
             null
         }
@@ -254,6 +257,7 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
     }
 
     override fun onDestroy() {
+        log("isolateHandler", "Destroy")
         PreferencesManager.setServiceRunning(this, false)
         super.onDestroy()
     }
@@ -285,7 +289,6 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
             val result: HashMap<Any, Any> =
                     hashMapOf(Keys.ARG_CALLBACK to callback,
                             Keys.ARG_LOCATION to location)
-            log("isolateHandler", "New location")
             sendLocationEvent(result)
         }
     }
